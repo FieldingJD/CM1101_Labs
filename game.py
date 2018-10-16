@@ -18,6 +18,15 @@ def remove_punct(text):
     'goSouTh'
     """
     pass # The pass statement does nothing. Replace it with the body of your function.
+    new_text = []
+    letters = [' ','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    for cha in text:
+        if cha in letters:
+            new_text.append(cha)
+        else:
+            pass
+    new_text = ''.join(new_text)
+    return new_text
     
     
 def remove_spaces(text):
@@ -36,8 +45,21 @@ def remove_spaces(text):
     >>> remove_spaces("   ")
     ''
     """
-    pass
-
+    new_text = []
+    for cha in text:
+        new_text.append(cha)
+    while True:
+        if len(new_text) > 0:
+            if new_text[0] == " ":
+                del new_text[0]
+            elif new_text[-1] == " ":
+                del new_text[-1]
+            elif new_text[0] != " " and new_text[-1] != " ":
+                break
+        else:
+            break
+    new_text = ''.join(new_text)
+    return new_text
 
 def normalise_input(user_input):
     """This function removes all punctuation, leading and trailing
@@ -51,7 +73,7 @@ def normalise_input(user_input):
     >>> normalise_input("HELP!!!!!!!")
     'help'
     """
-    pass
+    return remove_spaces(remove_punct(user_input)).lower()
 
     
 def display_room(room):
@@ -73,6 +95,11 @@ def display_room(room):
 
     Note: <BLANKLINE> here means that doctest should expect a blank line.
     """
+    print()
+    print(room["name"].upper())
+    print()
+    print(room["description"])
+    print()
     # pass # The pass statement does nothing. Replace it with the body of your function.
 
     
@@ -88,7 +115,9 @@ def exit_leads_to(exits, direction):
     >>> exit_leads_to(rooms["Tutor"]["exits"], "west")
     'Reception'
     """
-    pass
+    new_room = exits[direction]
+    room_name = rooms[new_room]
+    return (room_name["name"])
     
 
 def print_menu_line(direction, leads_to):
@@ -104,7 +133,14 @@ def print_menu_line(direction, leads_to):
     >>> print_menu_line("south", "MJ and Simon's room")
     Go SOUTH to MJ and Simon's room.
     """
-    pass
+    menu_line = []
+    menu_line.append("Go ")
+    menu_line.append(direction.upper())
+    menu_line.append(" to ")
+    menu_line.append(leads_to)
+    menu_line.append(".")
+    menu_line = ''.join(menu_line)
+    print(menu_line)
 
 
 def print_menu(exits):
@@ -123,6 +159,9 @@ def print_menu(exits):
     Where do you want to go?
     """
     print("You can:")
+
+    for items in exits:
+        print_menu_line(items,exit_leads_to(exits, items))
     
     # COMPLETE THIS PART:
     # Iterate over available exits:
@@ -147,7 +186,11 @@ def is_valid_exit(exits, user_input):
     >>> is_valid_exit(rooms["Parking"]["exits"], "east")
     True
     """
-    pass
+    try:
+        valid_input = exits[user_input]
+        return True
+    except Exception as e:
+        return False
 
 
 def menu(exits):
@@ -162,7 +205,18 @@ def menu(exits):
 
     # Repeat until the player enter a valid choice
     while True:
-        pass
+        print_menu(exits)
+        p_input = input(">")
+        normalise_input(p_input)
+        directions = ["north","south","east","west"]
+        p_input = p_input.split()
+        if p_input[1] in directions:
+            if is_valid_exit(exits, p_input[1]) == True:
+                return p_input[1]
+            else:
+                print("You can't go that way.")
+        else:
+            print("Not a valid direction.")
         # COMPLETE THIS PART:
         
         # Display menu
@@ -189,7 +243,8 @@ def move(exits, direction):
     >>> move(rooms["Reception"]["exits"], "west") == rooms["Office"]
     False
     """
-    pass
+    room = exits[direction]
+    return rooms[room]
 
 
 # This is the entry point of our program
@@ -201,10 +256,11 @@ def main():
     while True:
         # Display game status (room description etc.)
         display_room(current_room)
+        
 
         # What are the possible exits from the current room?
         exits = current_room["exits"]
-
+    
         # Show the menu with exits and ask the player
         direction = menu(exits)
 
