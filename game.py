@@ -207,16 +207,19 @@ def menu(exits):
     while True:
         print_menu(exits)
         p_input = input(">")
-        normalise_input(p_input)
-        directions = ["north","south","east","west"]
-        p_input = p_input.split()
-        if p_input[1] in directions:
-            if is_valid_exit(exits, p_input[1]) == True:
-                return p_input[1]
+        try:
+            normalise_input(p_input)
+            directions = ["north","south","east","west"]
+            p_input = p_input.split()
+            if p_input[1] in directions:
+                if is_valid_exit(exits, p_input[1]) == True:
+                    return p_input[1]
+                else:
+                    print("You can't go that way.")
             else:
-                print("You can't go that way.")
-        else:
-            print("Not a valid direction.")
+                print("Not a valid direction.")
+        except Exception as e:
+            print("That makes no sense.")
         # COMPLETE THIS PART:
         
         # Display menu
